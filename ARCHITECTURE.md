@@ -38,7 +38,7 @@ Railway edge (HTTPS, public domain)
 
 ## Client addresses
 
-Railway's edge adds the visitor's address to `X-Forwarded-For`. `nginx.conf` takes the **last** entry as
-`$remote_addr` (`real_ip_recursive off`) — the one the edge added, not one a client sent — and upstream's server
-block then overwrites `X-Forwarded-For`/`X-Real-IP` with it. With `TRUST_PROXY=1` the API's sign-in throttle and
-activity log count real visitors rather than the edge.
+Railway's edge overwrites `X-Real-IP` with the visitor's address and `X-Forwarded-For` with "visitor, edge-hop",
+discarding whatever the client sent (verified live). `nginx.conf` takes `X-Real-IP` as `$remote_addr`, and
+upstream's server block then overwrites `X-Forwarded-For`/`X-Real-IP` towards the API with it. With `TRUST_PROXY=1`
+the API's sign-in throttle and activity log count real visitors rather than the edge.

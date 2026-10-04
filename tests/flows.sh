@@ -7,7 +7,7 @@
 section "one origin: frontend and API"
 root=$(curl -s --max-time 30 -D "$TEST_TMP/root.h" "$APP_URL/")
 assert_contains "the frontend is served at /" '<div id="root"' "$root"
-assert_contains "frames are refused (upstream's nginx headers)" 'X-Frame-Options: DENY' "$(tr -d '\r' < "$TEST_TMP/root.h")"
+assert_contains "frames are refused (upstream's nginx headers)" 'x-frame-options: deny' "$(tr -d '\r' < "$TEST_TMP/root.h" | tr '[:upper:]' '[:lower:]')"
 cfg=$(curl -s --max-time 30 "$APP_URL/api/config")
 assert_eq "sign-up is invite-only" "true" "$(jq -r .invite_only <<<"$cfg")"
 assert_eq "the guest door is closed" "false" "$(jq -r .allow_guest <<<"$cfg")"

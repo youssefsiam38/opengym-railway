@@ -48,7 +48,7 @@ assert_eq "password sign-in on (the seeded owner's way in)" "1" "$(jq -r .PASSWO
 assert_contains "the compose owner password is a placeholder" 'local-test-only' "$(jq -r .OWNER_PASSWORD <<<"$env_json")"
 assert_contains "the seed never overwrites existing profiles" 'db.users.length > 0' "$(cat images/app/seed-owner.mjs)"
 assert_contains "the seed uses openGym's own password hashing" "from './password.js'" "$(cat images/app/seed-owner.mjs)"
-assert_contains "nginx takes the client address from the edge's last X-Forwarded-For entry" 'real_ip_recursive off' "$(cat images/app/nginx.conf)"
+assert_contains "nginx takes the client address from the edge's X-Real-IP" 'real_ip_header X-Real-IP' "$(cat images/app/nginx.conf)"
 if grep -q 'OWNER_PASSWORD' images/app/entrypoint.sh && ! grep -qE 'log .*\$\{?OWNER_PASSWORD' images/app/entrypoint.sh; then
   pass "the entrypoint never logs the owner password"
 else
