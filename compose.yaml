@@ -1,0 +1,40 @@
+# Local test topology. One service mirrors the single Railway service:
+#   app -> openGym's API + the web image's frontend served by nginx (same container).
+#          nginx is public on $PORT and proxies /api to the API on :3000. Data + media on /storage.
+name: opengym-railway-test
+
+networks:
+  default:
+    name: opengym-railway-test
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: images/app/Dockerfile
+      args:
+        WRAPPER_VERSION: ${WRAPPER_VERSION:-0.0.0-local}
+        VCS_REF: ${VCS_REF:-local}
+    image: ${OPENGYM_RAILWAY_IMAGE:-opengym-railway:local}
+    restart: unless-stopped
+    init: true
+    environment:
+      PORT: '8080'
+      RP_ID: localhost
+      ORIGIN: http://localhost:${OPENGYM_TEST_PORT:-18080}
+      RP_NAME: openGym
+      OWNER_NAME: ${OPENGYM_TEST_OWNER_NAME:-Owner}
+      OWNER_PASSWORD: ${OPENGYM_TEST_OWNER_PASSWORD:-local-test-only-owner-pw}
+      INVITE_ONLY: '1'
+      ALLOW_GUEST: '0'
+      PASSWORD_LOGIN: '1'
+      TRUST_PROXY: '1'
+      # The media download is ~140 MB; tests skip it unless asked.
+      EXERCISE_MEDIA: ${OPENGYM_TEST_EXERCISE_MEDIA:-off}
+    ports:
+      - '127.0.0.1:${OPENGYM_TEST_PORT:-18080}:8080'
+    volumes:
+      - storage:/storage
+
+volumes:
+  storage:
