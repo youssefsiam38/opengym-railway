@@ -50,7 +50,7 @@ password and add a new one.
 | Path | |
 |---|---|
 | `images/app/` | Wrapper image: Dockerfile, entrypoint, nginx main config, owner seed |
-| `tests/` | `static.sh`, `smoke.sh`, `persistence.sh` (local), `railway-smoke.sh` (live) |
+| `tests/` | `static.sh`, `smoke.sh`, `persistence.sh` (local); `railway-smoke.sh`, `railway-redeploy-verify.sh` (live) |
 | `marketplace/OVERVIEW.md` | Marketplace page |
 | `RAILWAY_TEMPLATE.md` | Exact template configuration |
 
